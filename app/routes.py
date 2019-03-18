@@ -16,5 +16,8 @@ def hello_world():
 def random():
     r = requests.get("https://www.themealdb.com/api/json/v1/1/random.php")
     result = r.json()
-    name = result['meals'][0]['strMeal']
-    return name
+    response = {}
+    response['name'] = result['meals'][0]['strMeal']
+    response['img'] = result['meals'][0]['strMealThumb']
+    response['video'] = result['meals'][0]['strYoutube']
+    return jsonify(response)
