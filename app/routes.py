@@ -28,4 +28,5 @@ def random():
     response['name'] = result['meals'][0]['strMeal']
     response['img'] = result['meals'][0]['strMealThumb']
     response['video'] = result['meals'][0]['strYoutube']
+    response['instructions'] = result['meals'][0]['strInstructions'] 
     return jsonify(response)
