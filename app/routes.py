@@ -17,6 +17,14 @@ def random():
     r = requests.get("https://www.themealdb.com/api/json/v1/1/random.php")
     result = r.json()
     response = {}
+    response['ingredients'] = []
+    i = 1
+    while (i != 20 and result['meals'][0]['strIngredient' + str(i)] != ""):
+        tmp = {}
+        tmp['ingredient'] = result['meals'][0]['strIngredient' + str(i)]
+        tmp['mesures'] = result['meals'][0]['strMeasure' + str(i)]
+        response['ingredients'].append(tmp)
+        i += 1
     response['name'] = result['meals'][0]['strMeal']
     response['img'] = result['meals'][0]['strMealThumb']
     response['video'] = result['meals'][0]['strYoutube']
