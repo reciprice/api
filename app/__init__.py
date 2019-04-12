@@ -35,5 +35,7 @@ def create_app(test_config=None):
     def page_not_found(e):
         return "404", 404
     app.register_blueprint(routes.bp)
-
     return app
+
+app = create_app(None)
+app
