@@ -34,7 +34,6 @@ def get_wallmart_ingredients_by_recipe(recipe):
             if result['numItems'] != 0:
                 tmp = {}
                 tmp['name'] = result['items'][0]['name']
-                print(result['items'][0]['productUrl'])
                 tmp['url'] = short_url(wallmart_url=result['items'][0]['productUrl'])
                 tmp['price'] = result['items'][0]['salePrice']
                 arrray.append(tmp)
