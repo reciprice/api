@@ -1,4 +1,5 @@
 from flask import Flask, Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
+import json
 import requests
 
 WALLMART_API_KEY = "yzrgcfx54sxhvdc8s88e25q5"
@@ -15,6 +16,10 @@ def get_cart_price(cart):
     return price
 
 
+def short_url(wallmart_url):
+    r = requests.get("http://tinyurl.com/api-create.php?url=" + wallmart_url)
+    return r.text
+
 def get_wallmart_ingredients_by_recipe(recipe):
     arrray = []
     cart_price = []
@@ -26,7 +31,7 @@ def get_wallmart_ingredients_by_recipe(recipe):
             if result['numItems'] != 0:
                 tmp = {}
                 tmp['name'] = result['items'][0]['name']
-                tmp['url'] = result['items'][0]['productUrl']
+                tmp['url'] = short_url(wallmart_url=result['items'][0]['productUrl'])
                 tmp['price'] = result['items'][0]['salePrice']
                 arrray.append(tmp)
     return arrray
@@ -42,12 +47,14 @@ def format_response(result):
             tmp['ingredient'] = result['meals'][0]['strIngredient' + str(i)]
             tmp['mesures'] = result['meals'][0]['strMeasure' + str(i)]
             response['ingredients'].append(tmp)
-            i += 1 
+            i += 1
         response['cart'] = {}
-        response['cart']['wallmart'] = get_wallmart_ingredients_by_recipe(response['ingredients'])
+        response['cart']['wallmart'] = get_wallmart_ingredients_by_recipe(
+            response['ingredients'])
         response['name'] = result['meals'][0]['strMeal']
         response['img'] = result['meals'][0]['strMealThumb']
-        response['video'] = result['meals'][0]['strYoutube'].replace("watch?v=","embed/")
+        response['video'] = result['meals'][0]['strYoutube'].replace(
+            "watch?v=", "embed/")
         response['price'] = get_cart_price(response['cart']['wallmart'])
         response['instructions'] = result['meals'][0]['strInstructions']
         response['error'] = False
@@ -55,16 +62,20 @@ def format_response(result):
         response['error'] = True
     return response
 
+
 @bp.route('/hello')
 def hello_world():
     return 'Hello, World!'
 
+
 @bp.route('/search/<recipe_name>', methods=['GET'])
 def search(recipe_name):
-    r = requests.get("https://www.themealdb.com/api/json/v1/1/search.php?s=" + recipe_name)
+    r = requests.get(
+        "https://www.themealdb.com/api/json/v1/1/search.php?s=" + recipe_name)
     result = r.json()
     response = format_response(result)
     return jsonify(response)
+
 
 @bp.route("/random")
 def random():
