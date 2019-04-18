@@ -1,0 +1,48 @@
+{
+	"info": {
+		"_postman_id": "92111895-30ef-43fe-b999-ed2d2586391a",
+		"name": "Web_Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Recette aléatoire",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{ip}}:{{port}}/{{api_version_prefix}}/random"
+			},
+			"response": []
+		},
+		{
+			"name": "Recherche de recette",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{ip}}:{{port}}/{{api_version_prefix}}/search/{{recipe_name}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{ip}}:{{port}}/{{api_version_prefix}}/hello"
+			},
+			"response": []
+		}
+	]
+}
