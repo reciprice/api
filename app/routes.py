@@ -1,8 +1,7 @@
 from flask import Flask, Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
+from . import secret
 import json
 import requests
-
-WALLMART_API_KEY = "yzrgcfx54sxhvdc8s88e25q5"
 
 app = Flask(__name__)
 
@@ -17,20 +16,25 @@ def get_cart_price(cart):
 
 
 def short_url(wallmart_url):
-    r = requests.get("http://tinyurl.com/api-create.php?url=" + wallmart_url)
-    return r.text
+    hed = {'Authorization': 'Bearer ' + secret.BIT_LY_API_KEY}
+    data = {'long_url' : wallmart_url}
+    url = 'https://api-ssl.bitly.com/v4/bitlinks'
+    response = requests.post(url, json=data, headers=hed)
+    res_json = response.json();
+    return res_json['link']
 
 def get_wallmart_ingredients_by_recipe(recipe):
     arrray = []
     cart_price = []
     for val in recipe:
         r = requests.get("http://api.walmartlabs.com/v1/search?apiKey=" +
-                         WALLMART_API_KEY + "&query=" + val['ingredient'].replace(" ", "+"))
+                         secret.WALLMART_API_KEY + "&query=" + val['ingredient'].replace(" ", "+"))
         if (r.status_code == 200):
             result = r.json()
             if result['numItems'] != 0:
                 tmp = {}
                 tmp['name'] = result['items'][0]['name']
+                print(result['items'][0]['productUrl'])
                 tmp['url'] = short_url(wallmart_url=result['items'][0]['productUrl'])
                 tmp['price'] = result['items'][0]['salePrice']
                 arrray.append(tmp)
