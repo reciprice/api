@@ -63,6 +63,7 @@ def format_response(result):
         response['error'] = False
     except:
         response['error'] = True
+        return response
     return response
 
 
